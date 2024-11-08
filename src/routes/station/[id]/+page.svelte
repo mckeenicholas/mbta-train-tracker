@@ -10,7 +10,7 @@
 
 	const stationId: string = $page.params.id;
 
-	const fetchArrivalTimes = async (stationId: string): Promise<ApiResponse<Prediction>> => {
+	const fetchArrivalTimes = async (stationId: string): Promise<ApiResponse<Prediction[]>> => {
 		const endpoint = new URL('https://api-v3.mbta.com/predictions');
 		endpoint.searchParams.append('filter[stop]', stationId);
 		endpoint.searchParams.append('filter[revenue]', 'REVENUE');

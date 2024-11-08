@@ -17,7 +17,7 @@
 	vehicleEndpoint.searchParams.append('filter[route]', lines.join(','));
 	vehicleEndpoint.searchParams.append('filter[revenue]', 'REVENUE');
 
-	const fetchVehicles = async (): Promise<ApiResponse<Vehicle>> => {
+	const fetchVehicles = async (): Promise<ApiResponse<Vehicle[]>> => {
 		return await fetch(vehicleEndpoint.toString(), {
 			method: 'GET',
 			headers: {

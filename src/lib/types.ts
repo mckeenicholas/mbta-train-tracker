@@ -19,7 +19,7 @@ export interface IRoute {
 }
 
 export interface ApiResponse<T> {
-	data: T[];
+	data: T;
 	jsonapi: JsonApi;
 }
 
@@ -74,7 +74,7 @@ export interface Vehicle {
 	relationships: Relationships;
 }
 
-interface VehicleAttributes {
+export interface VehicleAttributes {
 	bearing: number;
 	carriages: Carriage[];
 	current_status: string;
@@ -89,7 +89,7 @@ interface VehicleAttributes {
 	updated_at: string;
 }
 
-interface Carriage {
+export interface Carriage {
 	label: string;
 	occupancy_percentage: number | null;
 	occupancy_status: string;
