@@ -9,6 +9,7 @@
 	import { LoaderCircle } from 'lucide-svelte';
 	import polylines from '$lib/polylines';
 	import polyline from '@mapbox/polyline';
+	import { fetchData } from '$lib/utils';
 
 	const { station, lines }: { station: Station; lines: string[] } = $props();
 	const { lat, lon } = station;
@@ -17,20 +18,7 @@
 	vehicleEndpoint.searchParams.append('filter[route]', lines.join(','));
 	vehicleEndpoint.searchParams.append('filter[revenue]', 'REVENUE');
 
-	const fetchVehicles = async (): Promise<ApiResponse<Vehicle[]>> => {
-		return await fetch(vehicleEndpoint.toString(), {
-			method: 'GET',
-			headers: {
-				accept: 'application/vnd.api+json'
-			}
-		}).then((r) => r.json());
-	};
-
-	const vehicleQuery = createQuery({
-		queryKey: ['vehicles', lines],
-		queryFn: fetchVehicles,
-		refetchInterval: 15000
-	});
+	const fetchVehicles = () => fetchData<ApiResponse<Vehicle[]>>(vehicleEndpoint);
 
 	let modalState = $state(false);
 	let selectedVehicle = $state<Vehicle | null>(null);
@@ -38,14 +26,15 @@
 	const nextStopEndpoint = $derived(
 		new URL(`https://api-v3.mbta.com/stops/${selectedVehicle?.relationships.stop.data.id}`)
 	);
-	const getNextStop = async (): Promise<ApiResponse<StopData>> => {
-		return await fetch(nextStopEndpoint.toString(), {
-			method: 'GET',
-			headers: {
-				accept: 'application/vnd.api+json'
-			}
-		}).then((r) => r.json());
-	};
+
+	const getNextStop = () => fetchData<ApiResponse<StopData>>(nextStopEndpoint);
+
+	const vehicleQuery = createQuery({
+		queryKey: ['vehicles', lines],
+		queryFn: fetchVehicles,
+		enabled: !!lines.length,
+		refetchInterval: 15000
+	});
 
 	const nextStationQuery = $derived(
 		createQuery({
@@ -87,7 +76,7 @@
 								<button onclick={() => openModal(vehicle)}>
 									<Mapicon
 										rotation={vehicle.attributes.bearing}
-										color={routeData.color && '000000'}
+										color={routeData?.color || '000000'}
 									/>
 								</button>
 							</HoverCard.Trigger>
@@ -149,8 +138,6 @@
 										{selectedVehicle.attributes.current_status}
 									{/if}
 								</p>
-
-								<!-- Speed -->
 								<p>
 									<span class="font-bold">Speed:</span>
 									{selectedVehicle.attributes.speed ?? 0} m/s

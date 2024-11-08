@@ -95,3 +95,18 @@ export const alpha = (color: string, opacity: number) => {
 		return `rgba(255, 255, 255, ${opacity})`;
 	}
 };
+
+export const buildUrl = (path: string = '') => {
+	const baseURL = import.meta.env.VITE_BASE_URL || '';
+
+	return `${baseURL.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}`;
+};
+
+export const fetchData = async <T>(url: URL | string): Promise<T> => {
+	return await fetch(url, {
+		method: 'GET',
+		headers: {
+			accept: 'application/vnd.api+json'
+		}
+	}).then((r) => r.json());
+};

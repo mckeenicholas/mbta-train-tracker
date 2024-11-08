@@ -7,20 +7,15 @@
 	import { ArrowLeft } from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button';
 	import Map from '$lib/components/custom/map.svelte';
+	import { buildUrl, fetchData } from '$lib/utils';
 
 	const stationId: string = $page.params.id;
 
-	const fetchArrivalTimes = async (stationId: string): Promise<ApiResponse<Prediction[]>> => {
+	const fetchArrivalTimes = (stationId: string) => {
 		const endpoint = new URL('https://api-v3.mbta.com/predictions');
 		endpoint.searchParams.append('filter[stop]', stationId);
 		endpoint.searchParams.append('filter[revenue]', 'REVENUE');
-
-		return await fetch(endpoint.toString(), {
-			method: 'GET',
-			headers: {
-				accept: 'application/vnd.api+json'
-			}
-		}).then((r) => r.json());
+		return fetchData<ApiResponse<Prediction[]>>(endpoint);
 	};
 
 	const stationQuery = createQuery({
@@ -37,7 +32,7 @@
 </script>
 
 <div>
-	<Button variant="secondary" href={import.meta.env.BASE_URL} class="ms-4 mt-4">
+	<Button variant="secondary" href={buildUrl()} class="ms-4 mt-4">
 		<ArrowLeft />
 	</Button>
 	<h1 class="-mt-4 mb-8 text-center text-4xl font-bold">

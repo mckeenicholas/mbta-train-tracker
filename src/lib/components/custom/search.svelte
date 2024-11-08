@@ -6,10 +6,8 @@
 	import { Card } from '../ui/card';
 	import { Button } from '../ui/button';
 	import { goto } from '$app/navigation';
-	import { haversineDistance } from '$lib/utils';
+	import { buildUrl, haversineDistance } from '$lib/utils';
 	import type { Station } from '$lib/types';
-
-	const BASE_URL = `${window.location.origin}${import.meta.env.BASE_URL}`;
 
 	let query = $state('');
 	const results = $derived(
@@ -51,8 +49,7 @@
 		} else if (event.key === 'Enter') {
 			const selectedStation = results[selectedIndex];
 			if (selectedStation) {
-				const url = new URL(`/station/${selectedStation.id}`, BASE_URL);
-				goto(url.toString());
+				goto(buildUrl(`station/${selectedStation.id}`));
 				query = '';
 			}
 		}
@@ -82,8 +79,7 @@
 				}
 
 				if (closestStation) {
-					const url = new URL(`/station/${closestStation.id}`, BASE_URL);
-					goto(url.toString());
+					goto(buildUrl(`station/${closestStation.id}`));
 				} else {
 					alert('No nearby station found');
 				}
@@ -114,10 +110,7 @@
 	{:else if query !== ''}
 		<ul class="mt-1">
 			{#each results as station, index}
-				<a
-					onclick={() => (query = '')}
-					href={new URL(`/station/${station.id}`, BASE_URL).toString()}
-				>
+				<a onclick={() => (query = '')} href={buildUrl(`station/${station.id}`)}>
 					<li
 						class={`flex items-center rounded-sm px-2 py-1 text-gray-600 hover:cursor-pointer ${selectedIndex === index ? 'bg-secondary' : 'hover:bg-secondary'}`}
 					>

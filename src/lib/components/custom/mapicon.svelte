@@ -6,7 +6,7 @@
 	xmlns="http://www.w3.org/2000/svg"
 	width="24"
 	height="24"
-	viewBox="0 0 12 12"
+	viewBox="-12 -12 24 24"
 	fill="#{color}"
 	stroke="#{color}"
 	stroke-width="2"
@@ -15,5 +15,5 @@
 	class="lucide lucide-navigation-2"
 	style="transform: rotate({rotation}deg);"
 >
-	<polygon points="6 1 9.5 10.5 6 8.5 2.5 10.5 6 1" />
+	<polygon points="0 -10 7 9 0 5 -7 9 0 -10" />
 </svg>
