@@ -1,6 +1,5 @@
 <script lang="ts">
 	const { rotation = 0, color }: { rotation: number; color: string } = $props();
-	import { createEventDispatcher } from 'svelte';
 </script>
 
 <svg

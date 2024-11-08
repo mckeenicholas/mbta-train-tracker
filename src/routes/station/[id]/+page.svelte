@@ -37,7 +37,7 @@
 </script>
 
 <div>
-	<Button variant="secondary" href="/" class="ms-4 mt-4">
+	<Button variant="secondary" href={import.meta.env.BASE_URL} class="ms-4 mt-4">
 		<ArrowLeft />
 	</Button>
 	<h1 class="-mt-4 mb-8 text-center text-4xl font-bold">

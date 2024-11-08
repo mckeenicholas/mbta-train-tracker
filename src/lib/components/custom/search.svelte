@@ -9,10 +9,12 @@
 	import { haversineDistance } from '$lib/utils';
 	import type { Station } from '$lib/types';
 
+	const BASE_URL = `${window.location.origin}${import.meta.env.BASE_URL}`;
+
 	let query = $state('');
 	const results = $derived(
 		Object.entries(stations)
-			.map(([_, value]) => value)
+			.map(([, value]) => value)
 			.filter((station) => station.name.toLowerCase().includes(query.toLowerCase()))
 			.slice(0, 15)
 	);
@@ -49,19 +51,12 @@
 		} else if (event.key === 'Enter') {
 			const selectedStation = results[selectedIndex];
 			if (selectedStation) {
-				goto(`/station/${selectedStation.id}`);
+				const url = new URL(`/station/${selectedStation.id}`, BASE_URL);
+				goto(url.toString());
 				query = '';
 			}
 		}
 	};
-
-	$effect(() => {
-		// This doesnt do anything but it forces a forces a re-calculation since it's considered dependency
-		// there's probably a better way to do this however...
-		query;
-
-		selectedIndex = 0;
-	});
 
 	const findStation = () => {
 		if (!navigator.geolocation) {
@@ -87,7 +82,8 @@
 				}
 
 				if (closestStation) {
-					goto(`/station/${closestStation.id}`);
+					const url = new URL(`/station/${closestStation.id}`, BASE_URL);
+					goto(url.toString());
 				} else {
 					alert('No nearby station found');
 				}
@@ -103,7 +99,12 @@
 <svelte:window on:keydown={handleKeyDown} />
 <Card tabindex={0}>
 	<div class="m-1 flex items-center">
-		<Input placeholder="Find a station" bind:value={query} class="flex-grow" />
+		<Input
+			placeholder="Find a station"
+			bind:value={query}
+			onchange={() => (selectedIndex = 0)}
+			class="flex-grow"
+		/>
 		<Button variant="outline" class="ms-1" onclick={findStation}>
 			<MapPin />
 		</Button>
@@ -113,7 +114,10 @@
 	{:else if query !== ''}
 		<ul class="mt-1">
 			{#each results as station, index}
-				<a onclick={() => (query = '')} href={`/station/${station.id}`}>
+				<a
+					onclick={() => (query = '')}
+					href={new URL(`/station/${station.id}`, BASE_URL).toString()}
+				>
 					<li
 						class={`flex items-center rounded-sm px-2 py-1 text-gray-600 hover:cursor-pointer ${selectedIndex === index ? 'bg-secondary' : 'hover:bg-secondary'}`}
 					>

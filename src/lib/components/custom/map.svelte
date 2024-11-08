@@ -85,7 +85,10 @@
 						<HoverCard.Root openDelay={0} closeDelay={0}>
 							<HoverCard.Trigger>
 								<button onclick={() => openModal(vehicle)}>
-									<Mapicon rotation={vehicle.attributes.bearing} color={routeData.color} />
+									<Mapicon
+										rotation={vehicle.attributes.bearing}
+										color={routeData.color && '000000'}
+									/>
 								</button>
 							</HoverCard.Trigger>
 							<HoverCard.Content class="p-2">
