@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import Transitline from '$lib/components/custom/transitline.svelte';
 	import { createQuery } from '@tanstack/svelte-query';
-	import type { ApiResponse, StationMap } from '$lib/types';
+	import type { ApiResponse, Prediction, StationMap } from '$lib/types';
 	import { stations } from '$lib/stations';
 	import { ArrowLeft } from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button';
@@ -10,10 +10,12 @@
 
 	const stationId: string = $page.params.id;
 
-	const endpoint = `https://api-v3.mbta.com/predictions?filter%5Bstop%5D=${stationId}&filter%5Brevenue%5D=REVENUE`;
+	const fetchArrivalTimes = async (stationId: string): Promise<ApiResponse<Prediction>> => {
+		const endpoint = new URL('https://api-v3.mbta.com/predictions');
+		endpoint.searchParams.append('filter[stop]', stationId);
+		endpoint.searchParams.append('filter[revenue]', 'REVENUE');
 
-	const fetchArrivalTimes = async (): Promise<ApiResponse> => {
-		return await fetch(endpoint, {
+		return await fetch(endpoint.toString(), {
 			method: 'GET',
 			headers: {
 				accept: 'application/vnd.api+json'
@@ -21,14 +23,17 @@
 		}).then((r) => r.json());
 	};
 
-	const query = createQuery({
+	const stationQuery = createQuery({
 		queryKey: ['predictions', stationId],
-		queryFn: fetchArrivalTimes,
+		queryFn: () => fetchArrivalTimes(stationId),
 		enabled: !!stationId,
 		refetchInterval: 60000
 	});
 
 	const station = $derived(stations[stationId as keyof StationMap]);
+	const lines = $derived([
+		...new Set($stationQuery.data?.data.map((item) => item.relationships.route.data.id))
+	]);
 </script>
 
 <div>
@@ -38,14 +43,14 @@
 	<h1 class="-mt-4 mb-8 text-center text-4xl font-bold">
 		{station.name}
 	</h1>
-	<div class="m-4">
-		<Map {station}/>
-	</div>
-	{#if $query.isLoading}
+	{#if $stationQuery.isLoading}
 		<p>Fetching times...</p>
-	{:else if $query.isError}
+	{:else if $stationQuery.isError}
 		<p>Error fetching times.</p>
-	{:else if $query.isSuccess}
-		<Transitline data={$query.data.data} />
+	{:else if $stationQuery.isSuccess}
+		<div class="m-4">
+			<Map {station} {lines} />
+		</div>
+		<Transitline data={$stationQuery.data.data} />
 	{/if}
 </div>

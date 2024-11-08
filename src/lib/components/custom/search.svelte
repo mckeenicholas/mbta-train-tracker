@@ -6,6 +6,8 @@
 	import { Card } from '../ui/card';
 	import { Button } from '../ui/button';
 	import { goto } from '$app/navigation';
+	import { haversineDistance } from '$lib/utils';
+	import type { Station } from '$lib/types';
 
 	let query = $state('');
 	const results = $derived(
@@ -36,37 +38,73 @@
 
 	// Handle keyboard navigation
 	const handleKeyDown = (event: KeyboardEvent) => {
-		if (results.length === 0) return; // No need to navigate if there are no results
+		if (results.length === 0) return;
 
 		if (event.key === 'ArrowDown') {
-			selectedIndex = (selectedIndex + 1) % results.length; // Loop back to the start
+			selectedIndex = (selectedIndex + 1) % results.length;
 			event.preventDefault();
 		} else if (event.key === 'ArrowUp') {
-			selectedIndex = (selectedIndex - 1 + results.length) % results.length; // Loop back to the end
+			selectedIndex = (selectedIndex - 1 + results.length) % results.length;
 			event.preventDefault();
 		} else if (event.key === 'Enter') {
 			const selectedStation = results[selectedIndex];
 			if (selectedStation) {
-				goto(`/station/${selectedStation.id}`); // Navigate to the selected station's route
+				goto(`/station/${selectedStation.id}`);
 				query = '';
 			}
 		}
 	};
 
 	$effect(() => {
-		// This doesnt do anything but it forces a forces a re-calculation since its a dependency
-		// there's probably a better way to do this...
+		// This doesnt do anything but it forces a forces a re-calculation since it's considered dependency
+		// there's probably a better way to do this however...
 		query;
 
 		selectedIndex = 0;
 	});
+
+	const findStation = () => {
+		if (!navigator.geolocation) {
+			alert('Geolocation is not supported by your browser');
+			return;
+		}
+
+		navigator.geolocation.getCurrentPosition(
+			(position) => {
+				const userLat = position.coords.latitude;
+				const userLon = position.coords.longitude;
+
+				let closestStation: null | Station = null;
+				let minDistance = Infinity;
+
+				for (const station of Object.values(stations)) {
+					const distance = haversineDistance(userLat, userLon, station.lat, station.lon);
+
+					if (distance < minDistance) {
+						minDistance = distance;
+						closestStation = station;
+					}
+				}
+
+				if (closestStation) {
+					goto(`/station/${closestStation.id}`);
+				} else {
+					alert('No nearby station found');
+				}
+			},
+			(error) => {
+				console.error('Error getting location:', error);
+				alert('Unable to retrieve your location');
+			}
+		);
+	};
 </script>
 
 <svelte:window on:keydown={handleKeyDown} />
 <Card tabindex={0}>
 	<div class="m-1 flex items-center">
 		<Input placeholder="Find a station" bind:value={query} class="flex-grow" />
-		<Button variant="outline" class="ms-1">
+		<Button variant="outline" class="ms-1" onclick={findStation}>
 			<MapPin />
 		</Button>
 	</div>

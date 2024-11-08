@@ -15,5 +15,7 @@
 </script>
 
 <QueryClientProvider client={queryClient}>
-	{@render children()}
+	<div class="mx-auto w-full lg:w-3/4">
+		{@render children()}
+	</div>
 </QueryClientProvider>
