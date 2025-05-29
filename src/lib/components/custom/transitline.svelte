@@ -56,7 +56,7 @@
 </script>
 
 <ul>
-	{#each groupByType(data) as item}
+	{#each groupByType(data) as item, index (index)}
 		<Routecard data={item} />
 	{/each}
 </ul>

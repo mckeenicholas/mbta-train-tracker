@@ -1247,4 +1247,4 @@ export const routes: IRoute = {
 		directions: ['Walpole Center', 'Forest Hills Station'],
 		type: 3
 	}
-};
+} as const;

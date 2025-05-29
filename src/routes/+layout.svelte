@@ -4,11 +4,7 @@
 	import '../app.css';
 
 	const queryClient = new QueryClient({
-		defaultOptions: {
-			queries: {
-				enabled: browser
-			}
-		}
+		defaultOptions: { queries: { enabled: browser } }
 	});
 
 	let { children } = $props();

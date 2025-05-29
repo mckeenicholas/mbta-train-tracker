@@ -67,7 +67,7 @@
 			></Popup>
 		</Marker>
 		{#if $vehicleQuery.isSuccess}
-			{#each $vehicleQuery.data.data as vehicle}
+			{#each $vehicleQuery.data.data as vehicle (vehicle.id)}
 				{@const routeData = routes[vehicle.relationships.route.data.id]}
 				<Marker latLng={[vehicle.attributes.latitude, vehicle.attributes.longitude]}>
 					<DivIcon>
@@ -88,7 +88,7 @@
 								</p>
 								<div class="flex">
 									<button
-										class="cursor-pointer italic underline hover:text-muted-foreground"
+										class="hover:text-muted-foreground cursor-pointer italic underline"
 										onclick={() => openModal(vehicle)}
 									>
 										More info
@@ -100,10 +100,10 @@
 				</Marker>
 			{/each}
 		{/if}
-		{#each lines as line}
+		{#each lines as line (line)}
 			{#if line in polylines}
 				{@const shapes = polylines[line as keyof typeof polylines]}
-				{#each shapes as shape}
+				{#each shapes as shape (shape)}
 					<Polyline
 						latLngs={polyline.decode(shape)}
 						options={{ color: `#${routes[line].color}` }}
@@ -151,8 +151,8 @@
 						{#if selectedVehicle.attributes.carriages.length}
 							<p class="font-bold"><span class="text-red-600">BETA:</span> Ride Occupancy</p>
 							<ul class="ms-2">
-								{#each selectedVehicle.attributes.carriages as carrige, index}
-									<li>Car {index + 1}: {carrige.occupancy_status && 'No data available'}</li>
+								{#each selectedVehicle.attributes.carriages as carrige, index (index)}
+									<li>Car {index + 1}: {carrige.occupancy_status || 'No data available'}</li>
 								{/each}
 							</ul>
 						{/if}

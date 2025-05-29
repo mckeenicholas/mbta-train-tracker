@@ -28,14 +28,14 @@
 	class="mx-4 my-3 flex flex-grow flex-col border-4 p-2"
 >
 	<ul>
-		{#each Object.entries(data[1]) as [key, value]}
+		{#each Object.entries(data[1]) as [key, value] (key)}
 			<li>
 				<h2 style={`color: #${route.text_color}`} class="text-lg font-semibold">
 					{route.name} to {route.directions[(parseInt(key) + 1) % 2]}
 				</h2>
 
 				<ul class="ps-4">
-					{#each value as time}
+					{#each value as time, idx (idx)}
 						<li>
 							<p style={`color: #${route.text_color}`}>
 								{`${formatTime(getTimeDifference(time))} at ${time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}

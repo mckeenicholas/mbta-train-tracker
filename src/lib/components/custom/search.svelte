@@ -93,7 +93,7 @@
 </script>
 
 <svelte:window on:keydown={handleKeyDown} />
-<Card tabindex={0}>
+<Card tabindex={0} class="gap-0 p-0.5">
 	<div class="m-1 flex items-center">
 		<Input
 			placeholder="Find a station"
@@ -109,13 +109,13 @@
 		<div class="my-2 text-center text-lg text-gray-600">No results found</div>
 	{:else if query !== ''}
 		<ul class="mt-1">
-			{#each results as station, index}
+			{#each results as station, index (index)}
 				<a onclick={() => (query = '')} href={buildUrl(`station/${station.id}`)}>
 					<li
 						class={`flex items-center rounded-sm px-2 py-1 text-gray-600 hover:cursor-pointer ${selectedIndex === index ? 'bg-secondary' : 'hover:bg-secondary'}`}
 					>
 						<div class="flex items-center">
-							{#each station.vehicles as vehicle}
+							{#each station.vehicles as vehicle, index (index)}
 								<!-- svelte-ignore svelte_component_deprecated -->
 								<svelte:component
 									this={getVehicleIcon(vehicle)}

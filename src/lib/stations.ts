@@ -1884,4 +1884,4 @@ export const stations: StationMap = {
 		lon: -71.04246,
 		vehicles: [3]
 	}
-};
+} as const;
