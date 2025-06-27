@@ -93,7 +93,7 @@
 </script>
 
 <svelte:window on:keydown={handleKeyDown} />
-<Card tabindex={0} class="gap-0 p-0.5">
+<Card tabindex={0} class="gap-0 p-0">
 	<div class="m-1 flex items-center">
 		<Input
 			placeholder="Find a station"
@@ -116,11 +116,8 @@
 					>
 						<div class="flex items-center">
 							{#each station.vehicles as vehicle, index (index)}
-								<!-- svelte-ignore svelte_component_deprecated -->
-								<svelte:component
-									this={getVehicleIcon(vehicle)}
-									class="me-1 h-5 w-5 text-gray-600"
-								/>
+								{@const VehicleIcon = getVehicleIcon(vehicle)}
+								<VehicleIcon class="me-1 h-5 w-5 text-gray-600" />
 							{/each}
 							<p class="ms-1">{station.name}</p>
 						</div>

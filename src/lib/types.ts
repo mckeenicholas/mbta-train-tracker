@@ -92,7 +92,7 @@ export interface VehicleAttributes {
 export interface Carriage {
 	label: string;
 	occupancy_percentage: number | null;
-	occupancy_status: string;
+	occupancy_status: OccupancyLevel;
 }
 
 export interface StopData {
@@ -134,3 +134,14 @@ export interface RelationshipLinks {
 		related: string;
 	};
 }
+
+export type OccupancyLevel =
+	| 'EMPTY'
+	| 'MANY_SEATS_AVAILABLE'
+	| 'FEW_SEATS_AVAILABLE'
+	| 'STANDING_ROOM_ONLY'
+	| 'CRUSHED_STANDING_ROOM_ONLY'
+	| 'FULL'
+	| 'NOT_ACCEPTING_PASSENGERS'
+	| 'NO_DATA_AVAILABLE'
+	| 'NOT_BOARDABLE';

@@ -39,19 +39,22 @@
 
 		const asList = Object.entries(result);
 
-		return asList.sort((a, b) => {
-			const typeComparison = routeTypeOrder[routes[a[0]].type] - routeTypeOrder[routes[b[0]].type];
-			if (typeComparison !== 0) {
-				return typeComparison;
-			}
-			if (a[0] < b[0]) {
-				return -1;
-			}
-			if (a[0] > b[0]) {
-				return 1;
-			}
-			return 0;
-		});
+		return asList
+			.filter((lineName) => lineName[0] in routes)
+			.sort((a, b) => {
+				const typeComparison =
+					routeTypeOrder[routes[a[0]].type] - routeTypeOrder[routes[b[0]].type];
+				if (typeComparison !== 0) {
+					return typeComparison;
+				}
+				if (a[0] < b[0]) {
+					return -1;
+				}
+				if (a[0] > b[0]) {
+					return 1;
+				}
+				return 0;
+			});
 	};
 </script>
 

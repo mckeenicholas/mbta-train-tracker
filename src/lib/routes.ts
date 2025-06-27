@@ -1246,5 +1246,12 @@ export const routes: IRoute = {
 		text_color: '000000',
 		directions: ['Walpole Center', 'Forest Hills Station'],
 		type: 3
+	},
+	'CR-NewBedford': {
+		name: 'Fall River/New Bedford',
+		color: '80276C',
+		text_color: 'FFFFFF',
+		directions: ['Fall River or New Bedford', 'South Station'],
+		type: 2
 	}
 } as const;

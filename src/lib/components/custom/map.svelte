@@ -10,6 +10,7 @@
 	import polylines from '$lib/polylines';
 	import polyline from '@mapbox/polyline';
 	import { fetchData } from '$lib/utils';
+	import Occupancydata from './occupancydata.svelte';
 
 	const { station, lines }: { station: Station; lines: string[] } = $props();
 	const { lat, lon } = station;
@@ -67,10 +68,10 @@
 			></Popup>
 		</Marker>
 		{#if $vehicleQuery.isSuccess}
-			{#each $vehicleQuery.data.data as vehicle (vehicle.id)}
+			{#each $vehicleQuery.data.data as vehicle, idx (idx)}
 				{@const routeData = routes[vehicle.relationships.route.data.id]}
 				<Marker latLng={[vehicle.attributes.latitude, vehicle.attributes.longitude]}>
-					<DivIcon>
+					<DivIcon options={{ className: 'vehicle-icon' }}>
 						<HoverCard.Root openDelay={0} closeDelay={0}>
 							<HoverCard.Trigger>
 								<button onclick={() => openModal(vehicle)}>
@@ -151,8 +152,10 @@
 						{#if selectedVehicle.attributes.carriages.length}
 							<p class="font-bold"><span class="text-red-600">BETA:</span> Ride Occupancy</p>
 							<ul class="ms-2">
-								{#each selectedVehicle.attributes.carriages as carrige, index (index)}
-									<li>Car {index + 1}: {carrige.occupancy_status || 'No data available'}</li>
+								{#each selectedVehicle.attributes.carriages as carriage, index (index)}
+									<li class="flex items-center gap-1">
+										Car {index + 1}: <Occupancydata data={carriage.occupancy_status} />
+									</li>
 								{/each}
 							</ul>
 						{/if}
@@ -174,5 +177,9 @@
 
 		width: 100%;
 		height: 400px;
+	}
+
+	:global(.vehicle-icon) {
+		background-color: transparent;
 	}
 </style>
