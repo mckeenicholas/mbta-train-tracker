@@ -14,7 +14,6 @@
 	"devDependencies": {
 		"@eslint/js": "^9.29.0",
 		"@internationalized/date": "^3.8.2",
-		"@lucide/svelte": "0.523.0",
 		"@sveltejs/adapter-auto": "6.0.1",
 		"@sveltejs/kit": "^2.22.2",
 		"@sveltejs/vite-plugin-svelte": "5.0.3",
@@ -26,7 +25,7 @@
 		"eslint-config-prettier": "10.1.5",
 		"eslint-plugin-svelte": "3.9.0",
 		"globals": "^16.2.0",
-		"lucide-svelte": "0.523.0",
+		"lucide-svelte": "0.525.0",
 		"prettier": "^3.6.2",
 		"prettier-plugin-svelte": "^3.4.0",
 		"prettier-plugin-tailwindcss": "^0.6.13",

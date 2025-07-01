@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import Transitline from '$lib/components/custom/transitline.svelte';
+	import { LoaderCircle } from 'lucide-svelte';
 	import { createQuery } from '@tanstack/svelte-query';
 	import type { ApiResponse, Prediction, StationMap } from '$lib/types';
 	import { stations } from '$lib/stations';
@@ -39,9 +40,9 @@
 		{station.name}
 	</h1>
 	{#if $stationQuery.isLoading}
-		<p>Fetching times...</p>
+		<LoaderCircle class="scale-150 animate-spin" />
 	{:else if $stationQuery.isError}
-		<p>Error fetching times.</p>
+		<p class="text-center text-xl text-red-600">Error fetching data</p>
 	{:else if $stationQuery.isSuccess}
 		<div class="m-4">
 			<Map {station} {lines} />
